@@ -25,14 +25,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return (obj.role in self.controls or STATE_EDITABLE in obj.states) and not STATE_READONLY in obj.states
 
 	def event_typedCharacter(self, obj, nextHandler, ch):
-		nextHandler()
 
 		print(self.is_editable(obj))
 		if not self.is_editable(obj):
 			if not self.toggled:
 				print("triggered")
+				speech._suppressSpeakTypedCharacters(1)
+				# speech.speech.cancelSpeech()
+		nextHandler()
 
-				speech.speech.cancelSpeech()
 	@script(gesture="kb:nvda+9", category="char_silencer", description=_("toggles the typing sound effects"))
 	def script_togle(self, gesture):
 		config.conf["char_silencer"]["toggled"] = self.toggled = not config.conf["char_silencer"]["toggled"]
